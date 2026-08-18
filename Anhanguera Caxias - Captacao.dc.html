@@ -3,6 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
+<link rel="shortcut icon" href="assets/anhanguera-logo.png" type="image/x-icon">
 <script src="./support.js"></script>
 </head>
 <body>
@@ -26,6 +27,9 @@
   @keyframes dcHeroBgFade { from { opacity: 0.4; } to { opacity: 1; } }
   @keyframes dcHeroTextIn { from { opacity: 0; transform: translateX(var(--heroFrom, 24px)); } to { opacity: 1; transform: none; } }
   @keyframes dcMenuIn { from { opacity: 0; transform: translateY(-6px); } to { opacity: 1; transform: none; } }
+  @keyframes dcPreloaderPulse { 0%, 100% { transform: scale(0.94); opacity: 0.72; } 50% { transform: scale(1); opacity: 1; } }
+  @keyframes dcPreloaderRing { to { transform: rotate(360deg); } }
+  @keyframes dcPreloaderBar { 0% { transform: translateX(-100%); } 50% { transform: translateX(0); } 100% { transform: translateX(100%); } }
 
   .dc-burger { display: none; }
   .dc-mobile-drawer { display: none; }
@@ -62,6 +66,20 @@
 </helmet>
 
 <div style="background: #FFFFFF;">
+
+  <sc-if value="{{ preloaderVisible }}" hint-placeholder-val="{{ true }}">
+    <div style="position: fixed; inset: 0; z-index: 200; background: #1D1D1B; display: flex; align-items: center; justify-content: center; opacity: {{ preloaderOpacity }}; pointer-events: {{ preloaderPointerEvents }}; transition: opacity 0.6s ease;">
+      <div style="display: flex; flex-direction: column; align-items: center; gap: 22px;">
+        <div style="position: relative; width: 108px; height: 108px; display: flex; align-items: center; justify-content: center;">
+          <span style="position: absolute; inset: 0; border-radius: 999px; border: 2px solid rgba(255,184,0,0.18); border-top-color: #FFB800; animation: dcPreloaderRing 1s linear infinite;"></span>
+          <img src="assets/anhanguera-logo.png" alt="Anhanguera" style="width: 56px; height: auto; display: block; animation: dcPreloaderPulse 1.4s ease-in-out infinite;" />
+        </div>
+        <div style="width: 148px; height: 3px; background: rgba(255,255,255,0.12); overflow: hidden; border-radius: 999px;">
+          <span style="display: block; width: 60%; height: 100%; background: linear-gradient(90deg, transparent, #F07300, #FFB800, transparent); animation: dcPreloaderBar 1.3s ease-in-out infinite;"></span>
+        </div>
+      </div>
+    </div>
+  </sc-if>
 
   <div style="background: #1D1D1B; color: #FFFFFF;">
     <div class="dc-topbar" style="max-width: 1200px; margin: 0 auto; padding: 9px 20px; display: flex; align-items: center; justify-content: space-between; gap: 20px; font-size: 12.5px; letter-spacing: 0.02em;">
@@ -129,7 +147,7 @@
             <a href="#inscricao" style="display: inline-flex; align-items: center; justify-content: center; height: 54px; padding: 0 26px; background: linear-gradient(135deg, #FF8A2E 0%, #F07300 55%, #D9640A 100%); box-shadow: 0 10px 24px -10px rgba(240,115,0,0.65), inset 0 1px 0 rgba(255,255,255,0.35); color: #FFFFFF; font-size: 15px; font-weight: 700; white-space: nowrap; transition: filter 0.2s;" style-hover="filter: brightness(1.1);">Quero me matricular</a>
             <a href="#unidade" style="display: inline-flex; align-items: center; justify-content: center; height: 54px; padding: 0 24px; border: 2px solid rgba(255,255,255,0.55); color: #FFFFFF; font-size: 15px; font-weight: 700; white-space: nowrap;" style-hover="border-color: #FFFFFF; background: rgba(255,255,255,0.12); color: #FFFFFF;">Falar com um consultor</a>
           </div>
-          <span style="align-self: flex-start; margin-top: 4px; background: #FFB800; color: #1D1D1B; font-size: 11.5px; font-weight: 800; letter-spacing: 0.14em; text-transform: uppercase; padding: 9px 14px; white-space: nowrap;">Matrícula sem taxa</span>
+          <span style="align-self: flex-start; margin-top: 4px; background: #FFB800; color: #1D1D1B; font-size: 11.5px; font-weight: 800; letter-spacing: 0.14em; text-transform: uppercase; padding: 9px 14px; white-space: nowrap;">Inscrição sem taxa</span>
         </div>
       </div>
 
@@ -261,7 +279,7 @@
           </div>
           <h2 style="margin: 14px 0 0; font-size: clamp(28px, 5vw, 42px); line-height: 1.05; letter-spacing: -0.03em; font-weight: 800; text-transform: uppercase; max-width: 20ch; text-wrap: pretty;">Escolha por onde sua carreira começa</h2>
         </div>
-        <a href="#inscricao" style="flex: none; display: inline-flex; align-items: center; height: 50px; padding: 0 22px; border: 2px solid #1D1D1B; font-size: 14.5px; font-weight: 700; white-space: nowrap;" style-hover="background: #1D1D1B; color: #FFFFFF;">Ver como me matricular</a>
+        <a href="#inscricao" style="flex: none; display: inline-flex; align-items: center; height: 50px; padding: 0 22px; border: 2px solid #1D1D1B; font-size: 14.5px; font-weight: 700; white-space: nowrap;" style-hover="background: #1D1D1B; color: #FFFFFF;">Ver como se Inscrever</a>
       </div>
 
       <div class="dc-cursos-grid" style="display: grid; grid-template-columns: repeat(4, 1fr); gap: 18px;">
@@ -289,15 +307,6 @@
             <span style="font-size: 11px; font-weight: 800; letter-spacing: 0.14em; text-transform: uppercase; color: #E06A00;">Bacharelado · saúde</span>
             <h3 style="margin: 0; font-size: 22px; letter-spacing: -0.02em; font-weight: 800;">Fonoaudiologia</h3>
             <p style="margin: 0; font-size: 14.5px; line-height: 1.55; color: #625F59;">Voz, audição e linguagem, com atuação em clínica, escola e hospital.</p>
-            <a href="#inscricao" style="margin-top: auto; font-size: 14.5px; font-weight: 700; color: #E06A00;">Quero este curso →</a>
-          </div>
-        </article>
-        <article style="border: 1px solid #EAE7E2; background: #FFFFFF; display: flex; flex-direction: column;" style-hover="border-color: #F07300;">
-          <div style="height: 180px; background: repeating-linear-gradient(135deg, #F2EFEA 0 14px, #EAE6DF 14px 28px); display: flex; align-items: center; justify-content: center; font-family: ui-monospace, Menlo, monospace; font-size: 11.5px; color: #8E8A83;">foto — educação física</div>
-          <div style="padding: 24px; display: flex; flex-direction: column; gap: 10px; flex: 1; border-top: 3px solid #F07300;">
-            <span style="font-size: 11px; font-weight: 800; letter-spacing: 0.14em; text-transform: uppercase; color: #E06A00;">Licenciatura e bacharelado</span>
-            <h3 style="margin: 0; font-size: 22px; letter-spacing: -0.02em; font-weight: 800;">Educação Física</h3>
-            <p style="margin: 0; font-size: 14.5px; line-height: 1.55; color: #625F59;">Escola, academia ou treinamento esportivo — você escolhe o caminho.</p>
             <a href="#inscricao" style="margin-top: auto; font-size: 14.5px; font-weight: 700; color: #E06A00;">Quero este curso →</a>
           </div>
         </article>
@@ -407,7 +416,7 @@
         <h2 style="margin: 0; font-size: clamp(26px, 5vw, 42px); line-height: 1.06; letter-spacing: -0.03em; font-weight: 800; text-transform: uppercase; color: #FFFFFF; max-width: 22ch; text-wrap: pretty;">Garanta sua vaga em Caxias para 2026</h2>
         <p style="margin: 0; font-size: 15px; color: #FFEEDC; max-width: 44ch;">Preencha o formulário acima e um consultor conduz sua matrícula do início ao fim.</p>
       </div>
-      <a href="#inscricao" style="flex: none; display: inline-flex; align-items: center; justify-content: center; width: 100%; max-width: 320px; height: 58px; padding: 0 32px; background: #FFFFFF; box-shadow: 0 14px 28px -10px rgba(0,0,0,0.4); color: #1D1D1B; font-size: 16px; font-weight: 700; white-space: nowrap; transition: filter 0.2s;" style-hover="background: #1D1D1B; color: #FFFFFF;">Quero me matricular</a>
+      <a href="#inscricao" style="flex: none; display: inline-flex; align-items: center; justify-content: center; width: 100%; max-width: 320px; height: 58px; padding: 0 32px; background: #FFFFFF; box-shadow: 0 14px 28px -10px rgba(0,0,0,0.4); color: #1D1D1B; font-size: 16px; font-weight: 700; white-space: nowrap; transition: ease-in 0.2s;" style-hover="background: #1D1D1B; color: #FFFFFF; box-shadow: #FF972F 0px 0px 50px">Quero me matricular</a>
     </div>
   </section>
 
@@ -430,9 +439,9 @@
       </div>
       <div style="display: flex; flex-direction: column; gap: 12px;">
         <div style="font-size: 11px; font-weight: 800; letter-spacing: 0.16em; text-transform: uppercase; color: #77726B;">Contato</div>
-        <span style="font-size: 14.5px;">Endereço da unidade — a definir</span>
-        <span style="font-size: 14.5px;">(99) 0000-0000</span>
-        <span style="font-size: 14.5px;">contato@exemplo.com</span>
+        <span style="font-size: 14.5px;">Caxias Shopping Center - BR-316, KM 554 - 4362 <br>Loja 08</span>
+        <span style="font-size: 14.5px;">(99) 98400-4609</span>
+        <span style="font-size: 14.5px;">anhangueracaxias@gmail.com</span>
       </div>
     </div>
     <div style="border-top: 1px solid #322F2B;">
@@ -456,6 +465,8 @@ class Component extends DCLogic {
     sent: false,
     rows: [],
     mobileMenuOpen: false,
+    preloaderVisible: true,
+    preloaderHiding: false,
     form: { name: "", phone: "", city: "", course: "", courseOther: "", consent: true }
   };
 
@@ -478,6 +489,22 @@ class Component extends DCLogic {
   statsRef = React.createRef();
 
   componentDidMount() {
+    const finishPreloader = () => {
+      const elapsed = Date.now() - this._preloaderStart;
+      const wait = Math.max(0, 900 - elapsed);
+      this._preloaderWaitTimer = setTimeout(() => {
+        this.setState({ preloaderHiding: true });
+        this._preloaderHideTimer = setTimeout(() => this.setState({ preloaderVisible: false }), 650);
+      }, wait);
+    };
+    this._preloaderStart = Date.now();
+    if (document.readyState === "complete") {
+      finishPreloader();
+    } else {
+      this._onPreloaderLoad = finishPreloader;
+      window.addEventListener("load", this._onPreloaderLoad, { once: true });
+    }
+
     if (this.props.autoplay === false) return;
     this.timer = setInterval(() => {
       if (!this.paused) this.setState(s => ({ slide: (s.slide + 1) % 3, dir: 1 }));
@@ -496,7 +523,14 @@ class Component extends DCLogic {
     window.addEventListener("scroll", this.onStatsScroll, { passive: true });
     this.onStatsScroll();
   }
-  componentWillUnmount() { clearInterval(this.timer); clearInterval(this.testimonialTimer); window.removeEventListener("scroll", this.onStatsScroll); }
+  componentWillUnmount() {
+    clearInterval(this.timer);
+    clearInterval(this.testimonialTimer);
+    window.removeEventListener("scroll", this.onStatsScroll);
+    if (this._onPreloaderLoad) window.removeEventListener("load", this._onPreloaderLoad);
+    clearTimeout(this._preloaderWaitTimer);
+    clearTimeout(this._preloaderHideTimer);
+  }
 
   set(key, value) {
     this.setState(s => ({ form: Object.assign({}, s.form, { [key]: value }) }));
@@ -527,6 +561,9 @@ class Component extends DCLogic {
     const inset = (1 - p) * 50;
     const bgSize = cur.bg ? "cover" : "auto";
     return {
+      preloaderVisible: this.state.preloaderVisible,
+      preloaderOpacity: this.state.preloaderHiding ? 0 : 1,
+      preloaderPointerEvents: this.state.preloaderHiding ? "none" : "auto",
       menuOpen: this.state.mobileMenuOpen,
       toggleMenu: () => this.setState(s => ({ mobileMenuOpen: !s.mobileMenuOpen })),
       closeMenu: () => this.setState({ mobileMenuOpen: false }),
