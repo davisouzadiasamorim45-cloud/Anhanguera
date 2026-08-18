@@ -211,7 +211,7 @@
               </label>
               <label style="display: flex; flex-direction: column; gap: 7px;">
                 <span style="font-size: 12px; font-weight: 700; letter-spacing: 0.1em; text-transform: uppercase; color: #6E6A64;">WhatsApp</span>
-                <input value="{{ fPhone }}" onChange="{{ onPhone }}" placeholder="(99) 90000-0000" style="height: 54px; padding: 0 16px; border: 1px solid #DCD8D2; background: #FFFFFF; font-size: 15.5px; color: #1D1D1B; outline: none;" style-focus="border-color: #F07300; box-shadow: inset 0 -3px 0 0 #F07300;" />
+                <input value="{{ fPhone }}" onChange="{{ onPhone }}" placeholder="(99) 99999-9999" inputmode="numeric" maxlength="15" style="height: 54px; padding: 0 16px; border: 1px solid #DCD8D2; background: #FFFFFF; font-size: 15.5px; color: #1D1D1B; outline: none;" style-focus="border-color: #F07300; box-shadow: inset 0 -3px 0 0 #F07300;" />
               </label>
               <label style="display: flex; flex-direction: column; gap: 7px;">
                 <span style="font-size: 12px; font-weight: 700; letter-spacing: 0.1em; text-transform: uppercase; color: #6E6A64;">Cidade</span>
@@ -365,14 +365,14 @@
           <p style="margin: 0; font-size: 19px; line-height: 1.45; font-weight: 500; text-wrap: pretty;">“Me atenderam pelo WhatsApp no mesmo dia e explicaram tudo sem enrolação. Isso me deu confiança.”</p>
           <footer style="display: flex; align-items: center; gap: 12px; margin-top: auto;">
             <span style="width: 40px; height: 40px; border-radius: 999px; background-image: url('assets/avatar-edfisica.jpg'); background-size: cover; background-position: center;"></span>
-            <span style="font-size: 12.5px; font-weight: 600; letter-spacing: 0.08em; text-transform: uppercase; color: #6E6A64;">Educação Física · Timon</span>
+            <span style="font-size: 12.5px; font-weight: 600; letter-spacing: 0.08em; text-transform: uppercase; color: #6E6A64;">Educação Física · Caxias</span>
           </footer>
         </blockquote>
         <blockquote style="margin: 0; border: 1px solid #EAE7E2; border-top: 3px solid #FFB800; background: #FFFFFF; padding: 28px; display: flex; flex-direction: column; gap: 18px;">
           <p style="margin: 0; font-size: 19px; line-height: 1.45; font-weight: 500; text-wrap: pretty;">“No primeiro semestre eu já estava em prática supervisionada. Foi aí que decidi que era isso mesmo.”</p>
           <footer style="display: flex; align-items: center; gap: 12px; margin-top: auto;">
             <span style="width: 40px; height: 40px; border-radius: 999px; background-image: url('assets/avatar-to.jpg'); background-size: cover; background-position: center;"></span>
-            <span style="font-size: 12.5px; font-weight: 600; letter-spacing: 0.08em; text-transform: uppercase; color: #6E6A64;">Fonoaudiologia · Codó</span>
+            <span style="font-size: 12.5px; font-weight: 600; letter-spacing: 0.08em; text-transform: uppercase; color: #6E6A64;">Fonoaudiologia · Caxias</span>
           </footer>
         </blockquote>
       </div>
@@ -502,12 +502,20 @@ class Component extends DCLogic {
     this.setState(s => ({ form: Object.assign({}, s.form, { [key]: value }) }));
   }
 
+  formatPhone(raw) {
+    const digits = raw.replace(/\D/g, "").slice(0, 11);
+    if (digits.length === 0) return "";
+    if (digits.length <= 2) return `(${digits}`;
+    if (digits.length <= 7) return `(${digits.slice(0, 2)}) ${digits.slice(2)}`;
+    return `(${digits.slice(0, 2)}) ${digits.slice(2, 7)}-${digits.slice(7)}`;
+  }
+
   renderVals() {
     const f = this.state.form;
     const accent = this.props.accentColor || "#F07300";
     const go = n => () => { this.paused = true; this.setState(s => ({ slide: n, dir: n > s.slide ? 1 : -1 })); };
     const cur = this.slides[this.state.slide];
-    const ready = f.name.trim().length > 2 && f.phone.trim().length > 7 && f.consent;
+    const ready = f.name.trim().length > 2 && f.phone.length === 15 && f.consent;
     const first = (f.name.trim().split(" ")[0]) || "tudo certo";
     const last = this.state.rows[this.state.rows.length - 1];
     const dot = n => (this.state.slide === n ? "#FFFFFF" : "rgba(255,255,255,0.42)");
@@ -558,7 +566,7 @@ class Component extends DCLogic {
       fName: f.name, fPhone: f.phone, fCity: f.city, fCourse: f.course, fCourseOther: f.courseOther, fConsent: f.consent,
       showOtherCourse: f.course === "Outro",
       onName: e => this.set("name", e.target.value),
-      onPhone: e => this.set("phone", e.target.value),
+      onPhone: e => this.set("phone", this.formatPhone(e.target.value)),
       onCity: e => this.set("city", e.target.value),
       onCourse: e => this.set("course", e.target.value),
       onCourseOther: e => this.set("courseOther", e.target.value),
